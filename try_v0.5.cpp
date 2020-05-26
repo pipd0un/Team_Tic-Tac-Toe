@@ -1,4 +1,5 @@
 #include <iostream>
+#include <cstdlib>
 using namespace std;
 
 class TicTacToe
@@ -75,9 +76,12 @@ int main()
 		}
 		else if(sel == 0)
 		{
-			cout<<"See Ya";
+			system("cls");
+			cout<<"\n\n	See Ya  ...\n\n";
+			broken=1;
 		}
 	}
+	system("pause");
 	return 0;
 };
 void startGame(TicTacToe &table)
@@ -87,8 +91,8 @@ void startGame(TicTacToe &table)
 	while(!broken)
 	{
 		callTable(table);
-		table.getTurn()>4 ? cout<<"Player "<<table.getTurn()%4<<"'s turn"<<endl : cout<<"Player "<<table.getTurn()<<"'s turn"<<endl;
-		cout<<"Select a cell number : ";
+		table.getTurn()>4 ? cout<<"\t\t  Player "<<table.getTurn()%4<<"'s turn"<<endl : cout<<"\t\t  Player "<<table.getTurn()<<"'s turn"<<endl;
+		cout<<"\t\t  Select a cell number : ";
 		cin>>cell;
 		markTable(table,cell);
 		if(table.getTurn() >= 4)
@@ -106,11 +110,11 @@ void PrintRes(TicTacToe &table,int checkMateRes)
 	int team = table.getTurn()%4;
 	if(checkMateRes > 0)
 	{
-		team == 1 || 3 ? cout<<" TEAM A WON !!!" : cout<<" TEAM B WON !!!";
+		team == 1 || 3 ? cout<<"\t\t TEAM A WON !!!" : cout<<"\t\t TEAM B WON !!!";
 	}
 	else if(checkMateRes == 0)
 	{
-		cout<<"Game Over !"<<"\nIt's DRAW !"<<endl;
+		cout<<"\t\t  Game Over !"<<"\n\t\t  It's DRAW !"<<endl;
 	}
 }
 void markTable(TicTacToe &table,int cell)
@@ -204,7 +208,7 @@ void callTable(TicTacToe &table)
     cout << "\n\n\t\t\t\t     Tic Tac Toe\n\n";
     cout << "\t\t\t    TEAM-A               TEAM-B"	  << endl;
     cout << "\t\t\t   Player 1 (X)  ||  Player 2 (O)" << endl;
-    cout << "\t\t\t   Player 3 (x)  ||  Player 4 (o)" << endl << endl;
+    cout << "\t\t\t   Player 3 (x)  ||  Player 4 (o)" << endl<<endl;
     cout << endl;
 	cout<<"\n\n\n";
 	for(int i =0;i<16;i++)
