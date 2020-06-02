@@ -1,5 +1,7 @@
 #include <iostream>
 #include <cstdlib>
+#include <string>
+
 using namespace std;
 
 class TicTacToe
@@ -12,7 +14,7 @@ class TicTacToe
 	public :
 		TicTacToe()
 		{
-			// DEFAULT;
+			// DEFAULT; 
 			cout<<"\nGame Board Created !"<<endl;
 			turn = 1;
 		}
@@ -37,6 +39,8 @@ class TicTacToe
 			cout<<"\t\t ** \t\t ** \t\t ** \t\t ** \n";
 			cout<<"\nSo whenever your turn comes you just should enter the cell number which you choose to mark !\n\n";
 		}
+		void analyse();
+		void linearCalc();
 		void nextTurn()
 		{
 			turn++;
@@ -45,14 +49,23 @@ class TicTacToe
 	    {
 	    	return turn;
 		}
+		string getSquare(int index)
+		{
+			return square[index];
+		}
+		void columnCalc();
+		void crossCalc();
 	private :
 		string square[16] = {"1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16"};
+		double linearRatio[2]; // [0] -> X's  [1] -> O's
+		double columnRatio[2];
+		double crossRatio[2];
 		int turn;
 };
 int main()
 {
 	// MAKE GAME
-	int sel,broken = 0;
+	int sel,broken = 0,anl;
 	char sel1;
 	cout<<"Welcome To Team Tic-Tac-Toe game !";
 	TicTacToe table;
@@ -72,7 +85,20 @@ int main()
 		else if(sel == 2)
 		{
 			startGame(table);
-			broken=1;
+			cout << "\nDo you want to analysis the table ?"<<endl;
+			cout<<"(1) Yes"<<"\n(2) No"<<"\n> "<<endl;
+			cin >> anl;
+			if( anl == 1)
+			{
+				table.analyse();
+				broken =1;
+			}
+			else if(anl == 2)
+			{
+				cout<<"\nSee Ya !"<<endl;
+				broken=1;
+			}
+			
 		}
 		else if(sel == 0)
 		{
@@ -84,6 +110,113 @@ int main()
 	system("pause");
 	return 0;
 };
+void TicTacToe::analyse()
+{ 
+	linearCalc();
+	columnCalc();
+	crossCalc();
+	cout<<" Team\t| % Line | % Column | % Cross"<<endl;
+	cout<<" ------------------------------------------"<<endl;
+	cout<<"| Xx\t|\t "<<100*linearRatio[0]<<"\t|\t "<<100*columnRatio[0]<<"\t|\t "<<100*crossRatio[0]<<"\t|"<<endl;
+	cout<<" ------------------------------------------"<<endl;
+	cout<<"| Oo\t|\t "<<100*linearRatio[1]<<"\t|\t "<<100*columnRatio[1]<<"\t|\t "<<100*crossRatio[1]<<"\t|"<<endl; 
+}
+void TicTacToe::crossCalc()
+{
+	int tempx=0,tempo=0;
+	double crossX[2];
+	double crossO[2];
+	for(int i=0;i<4;i++)
+	{
+		if( square[(5*i - 5)] == "x" || "X")
+		{
+			tempx++;
+		}
+		else if( square[(5*i - 5)] == "o" || "O")
+		{
+			tempo++;
+		}
+	}
+	crossX[0] = tempx;
+	crossO[0] = tempo;
+	tempx=0,tempo=0;
+	for(int i=0;i<4;i++)
+	{
+		if( square[(3*i)] == "x" || "X")
+		{
+			tempx++;
+		}
+		else if( square[(3*i)] == "o" || "O")
+		{
+			tempo++;
+		}
+	}
+	crossX[1] = tempx;
+	crossO[1] = tempo;
+	crossRatio[0] = (crossX[0]/4 + crossX[1]/4)/2;
+	crossRatio[1] = (crossO[0]/4 + crossO[1]/4)/2;
+}
+void TicTacToe::columnCalc()
+{
+	int tempx=0,tempo=0;
+	double columnForX[4];
+	double columnForO[4];
+	double buffx=0,buffo=0;
+	for(int j=0;j<4;j++)
+	{
+		for(int i=0;i<4;i++)
+		{
+			if( square[(4*i - 4)] == "x" || "X")
+			{
+				tempx++;
+			}
+			else if( square[(4*i - 4)] == "o" || "O")
+			{
+				tempo++;
+			}
+		}
+		columnForX[j] = tempx;
+		columnForO[j] = tempo;
+	}
+	
+	for(int i=0;i<4;i++)
+	{
+		buffx += columnForX[i]/4; 
+		buffo += columnForO[i]/4;
+	}
+	columnRatio[0] = buffx/4;
+	columnRatio[1] = buffo/4;
+}
+void TicTacToe::linearCalc()
+{
+	int tempx=0,tempo=0;
+	double lineForX[4];
+	double lineForO[4];
+	double buffx=0,buffo=0;
+	for(int i=0;i<4;i++)
+	{
+		for(int j=0;j<4;j++)
+		{
+			if( square[j] == "x" || "X")
+			{
+				tempx++;
+			}
+			else if( square[j] == "o" || "O")
+			{
+				tempo++;
+			}
+		}	
+		lineForX[i] = tempx;
+		lineForO[i] = tempo;
+	}
+	for(int i=0;i<4;i++)
+	{
+		buffx += lineForX[i]/4; 
+		buffo += lineForO[i]/4;
+	}
+	linearRatio[0] = buffx/4;
+	linearRatio[1] = buffo/4;
+}
 void startGame(TicTacToe &table)
 {
 	int cell,broken=0;
